@@ -34,3 +34,22 @@ jobs:
           git config user.email "actions@github.com"
           git add data/
           git diff --quiet && echo "No changes" || (git commit -m "Update MUFI export on $(date -u)" && git push)
+      - name: Send commit notification email
+        if: success()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "MUFI export updated on $(date -u)"
+          to: ${{ secrets.EMAIL_TO }}
+          from: ${{ secrets.SMTP_USERNAME }}
+          body: |
+            A new MUFI export has been committed to jsbien/MUFI_data.
+
+            Commit message:
+            Update MUFI export on $(date -u)
+
+            View repository:
+            https://github.com/jsbien/MUFI_data
