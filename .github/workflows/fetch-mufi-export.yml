@@ -35,6 +35,7 @@ jobs:
       - name: Check for changes and commit
         id: commit
         run: |
+          TIMESTAMP=$(date -u)
           git config user.name "jsbien"
           git config user.email "jsbien@uw.edu.pl"
           git add data/
@@ -42,10 +43,11 @@ jobs:
             echo "No changes detected"
             echo "changes_detected=false" >> "$GITHUB_OUTPUT"
           else
-            git commit -m "Update MUFI export on $(date -u)"
+            git commit -m "Update MUFI export on $TIMESTAMP"
             git remote set-url origin https://x-access-token:${{ secrets.MUFI_ACCESS }}@github.com/${{ github.repository }}.git
             git push origin main
             echo "changes_detected=true" >> "$GITHUB_OUTPUT"
+            echo "timestamp=$TIMESTAMP" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Send commit notification email
@@ -56,14 +58,11 @@ jobs:
           server_port: ${{ secrets.SMTP_PORT }}
           username: ${{ secrets.SMTP_USERNAME }}
           password: ${{ secrets.SMTP_PASSWORD }}
-          subject: "MUFI export updated on $(date -u)"
+          subject: "MUFI export updated on ${{ steps.commit.outputs.timestamp }}"
           to: ${{ secrets.EMAIL_TO }}
           from: ${{ secrets.SMTP_USERNAME }}
           body: |
             A new MUFI export has been committed to jsbien/MUFI_data.
-
-            Commit message:
-            Update MUFI export on $(date -u)
 
             View repository:
             https://github.com/jsbien/MUFI_data
