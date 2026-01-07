@@ -3,7 +3,7 @@
 name: Fetch MUFI Export Data
 
 permissions:
-	contents: write
+  contents: write
 
 on: schedule: - cron: '0 4 * * *' # Daily at 04:00 UTC — adjust later for weekly workflow_dispatch:
 
