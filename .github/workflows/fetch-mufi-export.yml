@@ -28,8 +28,8 @@ steps:
   - name: Check for changes and commit
     id: commit
     run: |
-      git config user.name "github-actions[bot]"
-      git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      git config user.name "jsbien"
+      git config user.email "jsbien@mimuw.edu.pl"
       git add data/
       if git diff --cached --quiet; then
         echo "No changes detected"
