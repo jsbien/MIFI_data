@@ -35,7 +35,7 @@ jobs:
           git add data/
           git diff --quiet && echo "No changes" || (git commit -m "Update MUFI export on $(date -u)" && git push)
 
-      - name: Check for changes
+      - name: Check for changes and commit
         id: commit
         run: |
           git config user.name "github-actions"
@@ -46,7 +46,8 @@ jobs:
             echo "changes_detected=false" >> "$GITHUB_OUTPUT"
           else
             git commit -m "Update MUFI export on $(date -u)"
-            git push
+            git remote set-url origin https://x-access-token:${{  secrets.MUFI_clone_access }}@github.com/jsbien/MUFI_data.git
+            git push origin main
             echo "changes_detected=true" >> "$GITHUB_OUTPUT"
           fi
 
