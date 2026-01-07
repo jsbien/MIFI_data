@@ -34,8 +34,23 @@ jobs:
           git config user.email "actions@github.com"
           git add data/
           git diff --quiet && echo "No changes" || (git commit -m "Update MUFI export on $(date -u)" && git push)
+          - name: Check for changes
+        id: commit
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add data/
+          if git diff --cached --quiet; then
+            echo "No changes detected"
+            echo "changes_detected=false" >> $GITHUB_OUTPUT
+          else
+            git commit -m "Update MUFI export on $(date -u)"
+            git push
+            echo "changes_detected=true" >> $GITHUB_OUTPUT
+          fi
+
       - name: Send commit notification email
-        if: success()
+        if: steps.commit.outputs.changes_detected == 'true'
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: ${{ secrets.SMTP_SERVER }}
