@@ -39,7 +39,7 @@ jobs:
             echo "changes_detected=false" >> "$GITHUB_OUTPUT"
           else
             git commit -m "Update MUFI export on $(date -u)"
-            git remote set-url origin https://x-access-token:${{  secrets.MUFI_access }}@github.com/jsbien/MUFI_data.git
+            git remote set-url origin https://x-access-token:${{  secrets.MUFI_ACCESS }}@github.com/jsbien/MUFI_data.git
             git push origin main
             echo "changes_detected=true" >> "$GITHUB_OUTPUT"
           fi
